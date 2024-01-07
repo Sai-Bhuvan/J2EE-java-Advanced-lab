@@ -1,0 +1,80 @@
+package pgm5;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+
+public class Bank extends JFrame implements ActionListener {
+    JLabel CustNoLabel = new JLabel("Customer No:");
+    JTextField CustNoTF = new JTextField(10);
+    JLabel CustNameLabel = new JLabel("Customer name:");
+    JTextField CustNameTF = new JTextField(10);
+    JLabel stateLabel = new JLabel("State:");
+    JTextField stateTF = new JTextField(10);
+    JLabel Credit_LimitLabel = new JLabel("Credit Limit:");
+    JTextField Credit_LimitTF = new JTextField(10);
+    JLabel RepNoLabel = new JLabel("Rep No:");
+    JTextField RepNoTF = new JTextField(10);
+    JButton submit = new JButton("Submit");
+
+    Bank(String title) {
+        super(title);
+        setLayout(new GridLayout(0, 2));
+        setVisible(true);
+        add(CustNoLabel);
+        add(CustNoTF);
+        add(CustNameLabel);
+        add(CustNameTF);
+        add(stateLabel);
+        add(stateTF);
+        add(Credit_LimitLabel);
+        add(Credit_LimitTF);
+        add(RepNoLabel);
+        add(RepNoTF);
+        add(submit);
+        submit.addActionListener(this);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String db = "jdbc:mysql://localhost:3306/bankDb";
+            String pass = "password";
+            String dir = "root";
+            Connection c = (Connection) DriverManager.getConnection(db, dir, pass);
+            Statement smt = c.createStatement();
+            String query = "insert into bank values (?, ?, ?, ?, ?);";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, CustNoTF.getText());
+            ps.setString(2, CustNameTF.getText());
+            ps.setString(3, stateTF.getText());
+            ps.setString(4, Credit_LimitTF.getText());
+            ps.setString(5, RepNoTF.getText());
+            ps.executeUpdate(); // insert, delete, update
+            ResultSet res = smt.executeQuery("select * from bank;");
+            while (res.next()) {
+                try {
+                    if (Integer.parseInt(res.getString("creditLimit")) > 15000) {
+                        System.out.println(res.getString("custNo"));
+                        System.out.println(res.getString("custName"));
+                        System.out.println(res.getString("state"));
+                        System.out.println(res.getString("creditLimit"));
+                        System.out.println(res.getString("repNo"));
+                        System.out.println();
+                    }
+                } catch (Exception e1) {
+                    System.out.println("Credit Limit is not a number");
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            ex.getStackTrace();
+        } catch (SQLException ex1) {
+            ex1.getStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        Bank bank = new Bank("Bank");
+    }
+}
