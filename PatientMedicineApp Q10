@@ -1,0 +1,109 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+
+public class PatientMedicineApp extends JFrame implements ActionListener {
+
+    JTextField patientNameTF, medicineTypeTF, treatmentTF;
+    JButton patientSubmitBtn, medicineSubmitBtn;
+    JTextArea patientDetailsTextArea;
+
+    Connection connection;
+
+    public PatientMedicineApp() {
+        // Create Swing components
+        patientNameTF = new JTextField(20);
+        medicineTypeTF = new JTextField(20);
+        treatmentTF = new JTextField(20);
+        patientSubmitBtn = new JButton("Submit Patient");
+        medicineSubmitBtn = new JButton("Submit Medicine");
+        patientDetailsTextArea = new JTextArea(10, 30);
+
+        patientSubmitBtn.addActionListener(this);
+        medicineSubmitBtn.addActionListener(this);
+
+        setLayout(new FlowLayout());
+
+        add(new JLabel("Patient Name:"));
+        add(patientNameTF);
+        add(new JLabel("Medicine Type:"));
+        add(medicineTypeTF);
+        add(new JLabel("Treatment:"));
+        add(treatmentTF);
+        add(patientSubmitBtn);
+        add(medicineSubmitBtn);
+        add(new JScrollPane(patientDetailsTextArea));
+
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+
+        connectToDB();
+    }
+
+    public void connectToDB() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/your_database_name";
+            String username = "your_username";
+            String password = "your_password";
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == patientSubmitBtn) {
+            insertPatient();
+        } else if (e.getSource() == medicineSubmitBtn) {
+            insertMedicine();
+        }
+    }
+
+    public void insertPatient() {
+        String patientName = patientNameTF.getText();
+        String medicineType = medicineTypeTF.getText();
+        String treatment = treatmentTF.getText();
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Patient (PatientName, MedicineType, Treatment) VALUES (?, ?, ?)");
+            ps.setString(1, patientName);
+            ps.setString(2, medicineType);
+            ps.setString(3, treatment);
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Patient information inserted successfully!");
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void insertMedicine() {
+        // Similar to insertPatient but for Medicine table
+    }
+
+    public void fetchPatientDetailsByMedicine(String medicineType) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Patient WHERE MedicineType = ?");
+            ps.setString(1, medicineType);
+            ResultSet rs = ps.executeQuery();
+
+            patientDetailsTextArea.setText("");
+            while (rs.next()) {
+                patientDetailsTextArea.append("Patient ID: " + rs.getInt("PatientID") +
+                        ", Name: " + rs.getString("PatientName") +
+                        ", Medicine Type: " + rs.getString("MedicineType") +
+                        ", Treatment: " + rs.getString("Treatment") + "\n");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        new PatientMedicineApp();
+    }
+}
