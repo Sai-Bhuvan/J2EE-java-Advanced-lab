@@ -1,0 +1,95 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class UserLoginValidation extends JFrame {
+    private JTextField nameField, ageField, familyMembersField, addressField;
+    private JComboBox<String> payscaleComboBox;
+    private JRadioButton maleRadioButton, femaleRadioButton;
+
+    public UserLoginValidation() {
+        setTitle("Employee Data Form");
+        setSize(500, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+
+        JLabel nameLabel = new JLabel("Name:");
+        nameField = new JTextField(20);
+
+        JLabel ageLabel = new JLabel("Age:");
+        ageField = new JTextField(5);
+
+        JLabel payscaleLabel = new JLabel("Pay Scale:");
+        String[] payscaleOptions = {"Option 1", "Option 2", "Option 3"}; // Add your pay scale options here
+        payscaleComboBox = new JComboBox<>(payscaleOptions);
+
+        JLabel familyMembersLabel = new JLabel("Number of Family Members:");
+        familyMembersField = new JTextField(5);
+
+        JLabel addressLabel = new JLabel("Address:");
+        addressField = new JTextField(20);
+
+        JLabel genderLabel = new JLabel("Gender:");
+        ButtonGroup genderGroup = new ButtonGroup();
+        maleRadioButton = new JRadioButton("Male");
+        femaleRadioButton = new JRadioButton("Female");
+        genderGroup.add(maleRadioButton);
+        genderGroup.add(femaleRadioButton);
+
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                submitData();
+            }
+        });
+
+        add(nameLabel);
+        add(nameField);
+        add(ageLabel);
+        add(ageField);
+        add(payscaleLabel);
+        add(payscaleComboBox);
+        add(familyMembersLabel);
+        add(familyMembersField);
+        add(addressLabel);
+        add(addressField);
+        add(genderLabel);
+        add(maleRadioButton);
+        add(femaleRadioButton);
+        add(submitButton);
+
+        setVisible(true);
+    }
+
+    private void submitData() {
+        String name = nameField.getText();
+        int age = Integer.parseInt(ageField.getText());
+        String payscale = payscaleComboBox.getSelectedItem().toString();
+        int familyMembers = Integer.parseInt(familyMembersField.getText());
+        String address = addressField.getText();
+        String gender = maleRadioButton.isSelected() ? "Male" : "Female";
+
+        if (age > 22 && age < 60) {
+            String message = "Name: " + name + "\nAge: " + age + "\nPay Scale: " + payscale +
+                    "\nNumber of Family Members: " + familyMembers + "\nAddress: " + address + "\nGender: " + gender;
+            JOptionPane.showMessageDialog(this, message, "Employee Data", JOptionPane.INFORMATION_MESSAGE);
+            ageField.setText("");
+            nameField.setText("");
+            familyMembersField.setText("");
+            addressField.setText("");
+        
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid age entered. Please enter age between 22 and 60.", "Age Error", JOptionPane.ERROR_MESSAGE);
+            ageField.setText("");
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new UserLoginValidation();
+            }
+        });
+    }
+}
