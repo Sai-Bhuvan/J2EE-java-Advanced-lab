@@ -1,0 +1,297 @@
+
+// import java.util.List;
+import java.util.ArrayList;
+// import java.util.Scanner;
+import java.util.Comparator;
+import java.util.Collections;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+class PriceComparator implements Comparator<Book> {
+    @Override
+    public int compare(Book book1, Book book2) {
+        return book1.price - book2.price;
+    }
+}
+
+
+class Book {
+	String title;
+	String author;String publisher;
+	int price;int id;
+	
+	Book(String title,
+	String author,String publisher,
+	int price,int id){
+		this.title=title;
+		this.author=author;
+		this.id=id;
+		this.publisher=publisher;
+		this.price=price;
+	}
+	
+	public String toString() {
+		return this.title+" "+this.author+" "+this.publisher+" "+this.price;
+	}
+}
+
+ public class Student extends JFrame{
+	JLabel title,auther,publisher,price,id;
+	private JTextField titleTF,autherTF,publisherTF,priceTF,idTF;
+	JButton addBook,updatepublishdetail;
+
+	public Student(){
+		setTitle("Main Frame");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(500, 500);
+		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+
+		title=new JLabel("title");
+		titleTF=new JTextField(30);
+
+		auther=new JLabel("auther");
+		autherTF=new JTextField(30);
+
+		publisher=new JLabel("publisher");
+		publisherTF=new JTextField(25);
+
+		price=new JLabel("price");
+		priceTF=new JTextField(5);
+
+		id=new JLabel("id");
+		idTF=new JTextField(5);
+
+		 addBook=new JButton(" add book ");
+		addBook.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				addbook();
+			}
+		}
+		);
+
+		updatepublishdetail=new JButton("update publisher");
+		updatepublishdetail.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				openNewWindow();
+			}
+		});
+
+		
+		
+		add(title);
+		add(titleTF);
+		add(auther);
+		add(autherTF);
+		add(publisher);
+		add(publisherTF);
+		add(price);
+		add(priceTF);
+		add(id);
+		add(idTF);
+		add(addBook);
+		add(updatepublishdetail);
+		addGUIFunctionality();
+
+		setVisible(true);
+	}
+    
+	
+	 public  void addbook(){
+
+			
+			String title=titleTF.getText();
+			String author=autherTF.getText();
+			String publisher=publisherTF.getText();
+			int id=Integer.parseInt(idTF.getText());
+			int price=Integer.parseInt(priceTF.getText());
+			
+			Book b=new Book(title,author,publisher,price,id);
+			arr.add(b);
+	 }
+
+     public void updatePublisher(String title, String newPublisherName) {
+		for (Book b : arr) {
+			if (b.title.equals(title)) {
+				b.publisher = newPublisherName;
+			}
+		}
+	}
+     
+     public static void bookof_publisher(String publish){
+         	for(Book b:arr) {
+    			if(b.publisher.equals(publish)) {
+    				System.out.println(b.toString());
+    			}
+		    }
+		  
+     }
+	
+	public static void bookOfAuther(String auther) {
+		for(Book b:arr) {
+			if(b.author.equals(auther)) {
+				System.out.println(b.toString());
+			}
+		}
+	}
+	
+	public static void booktitle(String title) {
+		for(Book b:arr) {
+			if(b.title.indexOf(title)!=-1) {
+				System.out.println(b.toString());
+			}
+		}
+	}
+	
+	public static ArrayList<Book> greaterprice(int price){
+		ArrayList<Book> a=new ArrayList<>();
+		for(Book d:arr) {
+			if(d.price>price) {
+				a.add(d);
+			}
+		}
+		return a;
+	}
+
+	private void openAuthorFrame() {
+		JFrame authorFrame = new JFrame("Books by Author");
+		authorFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		authorFrame.setSize(400, 300);
+	
+		JPanel panel = new JPanel();
+		panel.setLayout(new FlowLayout());
+	
+		JLabel authorLabel = new JLabel("Enter Author's Name:");
+		JTextField authorTF = new JTextField(20);
+	
+		JButton searchAuthorButton = new JButton("Search");
+		searchAuthorButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String authorName = authorTF.getText();
+				bookOfAuther(authorName);
+			}
+		});
+	
+		panel.add(authorLabel);
+		panel.add(authorTF);
+		panel.add(searchAuthorButton);
+	
+		authorFrame.add(panel);
+		authorFrame.setVisible(true);
+	}
+	
+	private void openPriceFrame() {
+		JFrame priceFrame = new JFrame("Books with Price Greater Than");
+		priceFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		priceFrame.setSize(400, 300);
+	
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+	
+		JLabel priceLabel = new JLabel("Enter Price:");
+		JTextField priceTF = new JTextField(10);
+	
+		JTextArea resultArea = new JTextArea(10, 30);
+		resultArea.setEditable(false);
+		JScrollPane scrollPane = new JScrollPane(resultArea);
+	
+		JButton searchPriceButton = new JButton("Search");
+		searchPriceButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int price = Integer.parseInt(priceTF.getText());
+					ArrayList<Book> booksAbovePrice = greaterprice(price);
+					resultArea.setText(""); // Clear previous results
+					for (Book book : booksAbovePrice) {
+						resultArea.append(book.toString() + "\n");
+					}
+				} catch (NumberFormatException ex) {
+					resultArea.setText("Please enter a valid price.");
+				}
+			}
+		});
+	
+		panel.add(priceLabel, BorderLayout.NORTH);
+		panel.add(priceTF, BorderLayout.CENTER);
+		panel.add(searchPriceButton, BorderLayout.SOUTH);
+		panel.add(scrollPane, BorderLayout.EAST);
+	
+		priceFrame.add(panel);
+		priceFrame.setVisible(true);
+	}
+	
+	public void addGUIFunctionality() {
+		JButton searchAuthorButton = new JButton("Search Books by Author");
+		searchAuthorButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				openAuthorFrame();
+			}
+		});
+	
+		JButton searchPriceButton = new JButton("Search Books by Price");
+		searchPriceButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				openPriceFrame();
+			}
+		});
+	
+		JPanel panel = new JPanel();
+		panel.add(searchAuthorButton);
+		panel.add(searchPriceButton);
+	
+		getContentPane().add(panel);
+	}
+
+	private void openNewWindow() {
+		JFrame newFrame = new JFrame("New Window");
+		newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		newFrame.setSize(500, 300);
+	
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(2, 2)); // Adjust layout as needed
+	
+		JLabel text = new JLabel("Enter publisher name");
+		JTextField textTF = new JTextField(30);
+		JLabel updatetext = new JLabel("Enter new name");
+		JTextField upJTextField = new JTextField(30);
+	
+		panel.add(text);
+		panel.add(textTF);
+		panel.add(updatetext);
+		panel.add(upJTextField);
+	
+		JButton updatepublisher = new JButton("Update publisher");
+		updatepublisher.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				updatePublisher(textTF.getText(), upJTextField.getText());
+			}
+		});
+	
+		newFrame.add(panel, BorderLayout.CENTER);
+		newFrame.add(updatepublisher, BorderLayout.SOUTH);
+		newFrame.setVisible(true);
+	}
+	
+	
+	static ArrayList<Book> arr=new ArrayList<>();
+	public static void main(String args[]) {
+
+		SwingUtilities.invokeLater((new Runnable() {
+			public void run(){
+				new Student();
+			}
+		}));
+        Collections.sort(arr, new PriceComparator());
+		
+	}
+}
+
+
