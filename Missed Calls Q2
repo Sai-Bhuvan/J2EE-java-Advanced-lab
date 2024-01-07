@@ -1,0 +1,109 @@
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Comparator;
+import java.util.Collections;
+
+class PriceComparator implements Comparator<Book> {
+    @Override
+    public int compare(Book book1, Book book2) {
+        return book1.price - book2.price;
+    }
+}
+
+class Book {
+	String title;
+	String author;String publisher;
+	int price;int id;
+	
+	Book(String title,
+	String author,String publisher,
+	int price,int id){
+		this.title=title;
+		this.author=author;
+		this.id=id;
+		this.publisher=publisher;
+		this.price=price;
+	}
+	
+	public String toString() {
+		return this.title+" "+this.author+" "+this.publisher+" "+this.price;
+	}
+}
+
+class Student{
+public static ArrayList<Book> updatepublisher(ArrayList<Book> arr, String title, String  new_publisher_name){
+         	for(Book b:arr) {
+    			if(b.title.equals(title)) {
+    			        b.publisher=new_publisher_name;
+    			}
+		    }
+		    return arr;
+     }
+     
+     public static void bookof_publisher(ArrayList<Book> arr,String publish){
+         	for(Book b:arr) {
+    			if(b.publisher.equals(publish)) {
+    				System.out.println(b.toString());
+    			}
+		    }
+		  
+     }
+	
+	public static void bookOfAuther(ArrayList<Book> arr,String auther) {
+		for(Book b:arr) {
+			if(b.author.equals(auther)) {
+				System.out.println(b.toString());
+			}
+		}
+	}
+	
+	public static void booktitle(ArrayList<Book> arr,String title) {
+		for(Book b:arr) {
+			if(b.title.indexOf(title)!=-1) {
+				System.out.println(b.toString());
+			}
+		}
+	}
+	
+	public static ArrayList<Book> greaterprice(ArrayList<Book> b,int price){
+		ArrayList<Book> a=new ArrayList<>();
+		for(Book d:b) {
+			if(d.price>price) {
+				a.add(d);
+			}
+		}
+		return a;
+	}
+	
+	public static void main(String args[]) {
+		Scanner in=new Scanner(System.in);
+		System.out.print("Enter no of books   ->    ");
+		int n=in.nextInt();
+		
+		System.out.println("Enter book details\n");
+		ArrayList<Book> arr=new ArrayList<>();
+		for(int i=0;i<n;i++) {
+		    System.out.println("Enter book " + (int)(i+1) + "details");
+		    System.out.print("Title ->");
+			String title=in.next();
+			System.out.print("Author ->");
+			String author=in.next();
+			System.out.print("Publisher ->");
+			String publisher=in.next();
+			System.out.print("price ->");
+			int price=in.nextInt();
+			System.out.print("Id ->");
+			int id=in.nextInt();
+			
+			Book b=new Book(title,author,publisher,price,id);
+			arr.add(b);
+		}
+		
+		bookOfAuther(arr,"ramesh");
+		ArrayList<Book> b=greaterprice(arr,100);
+		// Sort the books in ascending order of price
+        		Collections.sort(arr, new PriceComparator());
+	}
+}
+ 
