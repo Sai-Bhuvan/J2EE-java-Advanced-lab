@@ -1,109 +1,115 @@
+package is001;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Comparator;
-import java.util.Collections;
 
-class PriceComparator implements Comparator<Book> {
-    @Override
-    public int compare(Book book1, Book book2) {
-        return book1.price - book2.price;
-    }
+class Detail
+{
+  String name;
+  long number;
+
+    Detail (String name, long number)
+  {
+    this.name = name;
+    this.number = number;
+  }
+
+  public String toString ()
+  {
+    return this.name + " : " + this.number;
+  }
 }
 
-class Book {
-	String title;
-	String author;String publisher;
-	int price;int id;
-	
-	Book(String title,
-	String author,String publisher,
-	int price,int id){
-		this.title=title;
-		this.author=author;
-		this.id=id;
-		this.publisher=publisher;
-		this.price=price;
-	}
-	
-	public String toString() {
-		return this.title+" "+this.author+" "+this.publisher+" "+this.price;
-	}
-}
+public class Contact
+{
 
-class Student{
-public static ArrayList<Book> updatepublisher(ArrayList<Book> arr, String title, String  new_publisher_name){
-         	for(Book b:arr) {
-    			if(b.title.equals(title)) {
-    			        b.publisher=new_publisher_name;
-    			}
-		    }
-		    return arr;
-     }
-     
-     public static void bookof_publisher(ArrayList<Book> arr,String publish){
-         	for(Book b:arr) {
-    			if(b.publisher.equals(publish)) {
-    				System.out.println(b.toString());
-    			}
-		    }
-		  
-     }
-	
-	public static void bookOfAuther(ArrayList<Book> arr,String auther) {
-		for(Book b:arr) {
-			if(b.author.equals(auther)) {
-				System.out.println(b.toString());
-			}
-		}
-	}
-	
-	public static void booktitle(ArrayList<Book> arr,String title) {
-		for(Book b:arr) {
-			if(b.title.indexOf(title)!=-1) {
-				System.out.println(b.toString());
-			}
-		}
-	}
-	
-	public static ArrayList<Book> greaterprice(ArrayList<Book> b,int price){
-		ArrayList<Book> a=new ArrayList<>();
-		for(Book d:b) {
-			if(d.price>price) {
-				a.add(d);
-			}
-		}
-		return a;
-	}
-	
-	public static void main(String args[]) {
-		Scanner in=new Scanner(System.in);
-		System.out.print("Enter no of books   ->    ");
-		int n=in.nextInt();
-		
-		System.out.println("Enter book details\n");
-		ArrayList<Book> arr=new ArrayList<>();
-		for(int i=0;i<n;i++) {
-		    System.out.println("Enter book " + (int)(i+1) + "details");
-		    System.out.print("Title ->");
-			String title=in.next();
-			System.out.print("Author ->");
-			String author=in.next();
-			System.out.print("Publisher ->");
-			String publisher=in.next();
-			System.out.print("price ->");
-			int price=in.nextInt();
-			System.out.print("Id ->");
-			int id=in.nextInt();
-			
-			Book b=new Book(title,author,publisher,price,id);
-			arr.add(b);
-		}
-		
-		bookOfAuther(arr,"ramesh");
-		ArrayList<Book> b=greaterprice(arr,100);
-		// Sort the books in ascending order of price
-        		Collections.sort(arr, new PriceComparator());
-	}
+  public static ArrayList < Long > getmissedCalls ()
+  {
+    ArrayList < Long > a = new ArrayList <> ();
+    Scanner in = new Scanner (System.in);
+      System.out.println ("enter no of missed calls");
+    int n = in.nextInt ();
+
+      System.out.println ("enter the missed calls");
+    for (int i = 0; i < n; i++)
+      {
+	long s = in.nextLong ();
+	  a.add (s);
+      }
+
+    return a;
+  }
+
+  public static ArrayList < Detail > deletemissedcall (ArrayList < Detail >
+						       arr, long no)
+  {
+    Detail d = null;
+    int flag = 0;
+  for (Detail i:arr)
+      {
+	if (i.number == no)
+	  {
+	    d = i;
+	    flag = 1;
+	    break;
+	  }
+      }
+    if (flag == 1)
+      {
+	arr.remove (d);
+      }
+    return arr;
+  }
+
+  public static ArrayList < Detail > missedcallsDetail (HashMap < Detail, List < Detail >> map, ArrayList < Long >arr, long no, String name)
+  {
+List < Detail > l = map.get (new Detail (name, no));
+    ArrayList < Detail > d = new ArrayList <> ();
+
+  for (Detail i:l)
+      {
+	if (arr.contains (i.number))
+	  {
+	    System.out.println (i.toString ());
+	    d.add (i);
+	  }
+	else
+	  {
+	    System.out.println ("private caller");
+	  }
+      }
+
+    return d;
+
+  }
+
+  public static void main (String args[])
+  {
+    HashMap < Detail, List < Detail >> map = new HashMap <> ();
+    Scanner in = new Scanner (System.in);
+    System.out.println ("enter Detail(name,number) of owner");
+    String ownname = in.next ();
+    long num = in.nextLong ();
+    Detail d = new Detail (ownname, num);
+
+    System.out.println ("enter no of contacts");
+    int n = in.nextInt ();
+
+    List < Detail > l = new ArrayList <> ();
+
+    for (int i = 0; i < n; i++)
+      {
+	String name = in.next ();
+	long no = in.nextLong ();
+	Detail o = new Detail (ownname, num);
+
+	l.add (o);
+      }
+
+    map.put (d, l);
+    ArrayList < Long > a = getmissedCalls ();
+    ArrayList < Detail > missedcalls = missedcallsDetail (map, a, 1234567890, "ramesh");
+    missedcalls = deletemissedcall (missedcalls, 123456781);
+  }
 }
- 
