@@ -6,7 +6,7 @@ import java.sql.*;
 public class PatientMedicineApp extends JFrame implements ActionListener {
 
     JTextField patientNameTF, medicineTypeTF, treatmentTF;
-    JButton patientSubmitBtn, medicineSubmitBtn;
+    JButton patientSubmitBtn, medicineSubmitBtn,searchbymedicine,searchbytreatment;
     JTextArea patientDetailsTextArea;
 
     Connection connection;
@@ -18,6 +18,8 @@ public class PatientMedicineApp extends JFrame implements ActionListener {
         treatmentTF = new JTextField(20);
         patientSubmitBtn = new JButton("Submit Patient");
         medicineSubmitBtn = new JButton("Submit Medicine");
+        searchbymedicine=new JButton("search by medicine");
+        searchbytreatment=new JButton("search by treatment");
         patientDetailsTextArea = new JTextArea(10, 30);
 
         patientSubmitBtn.addActionListener(this);
@@ -33,6 +35,8 @@ public class PatientMedicineApp extends JFrame implements ActionListener {
         add(treatmentTF);
         add(patientSubmitBtn);
         add(medicineSubmitBtn);
+        add(searchbymedicine);
+        add(searchbytreatment);
         add(new JScrollPane(patientDetailsTextArea));
 
         setSize(400, 300);
@@ -59,8 +63,41 @@ public class PatientMedicineApp extends JFrame implements ActionListener {
             insertPatient();
         } else if (e.getSource() == medicineSubmitBtn) {
             insertMedicine();
+        }else if(e.getSource() == searchbytreatment){
+            getalltreatment();
+        }
+        else if(e.getSource() == searchbymedicine){
+            getallmedicine();
         }
     }
+
+    public void getalltreatment(){
+        JFrame sp=new JFrame("getalltreatment");
+        setTitle("getalltreatment");
+        setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
+        setDefaultCloseOperation(JFrme.DISPOSE_ON_CLOSE);
+        setSize(500,500);
+        setVisible(true);
+
+        JLabel treat=new JLabel("treat");
+        JTextFeild treatTF=new JTextFeild(30);
+        sp.add(treat);sp.add(treatTF);
+        String s=treat.getText();
+        PreparedStatement pt=connection.prepareStatement("SELECT * FROM Patient WHERE Treatment=?");
+        pt.setString(1,s);
+        ResultSet rs=pt.executeQuery();
+
+        JTextArea ar=new JTextArea(10,20);
+        sp.add(ar);
+        ar.setString("");
+        while(rs.hasNext()){
+            String re=re.getString("")+" " +re.getString("")+"\n";
+            ar.append(re);
+        }
+
+        
+    }
+        
 
     public void insertPatient() {
         String patientName = patientNameTF.getText();
