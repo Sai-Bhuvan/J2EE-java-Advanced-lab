@@ -1,0 +1,101 @@
+import java.io.*;
+import java.awt.*;
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.awt.event.*;
+
+class CustomerItems extends JFrame{
+    
+    JLabel mobileno=new JLabel("mobile no");
+    JTextField moTextField=new JTextField(30);
+
+    JLabel custid=new JLabel("cust no");
+    JTextField custTF=new JTextField(30);
+
+    JLabel name=new JLabel("name no");
+    JTextField nameTF=new JTextField(30);
+
+    // int cus=1;
+
+    JLabel itemid=new JLabel("item no");
+    JTextField itemidTF=new JTextField(30);
+
+    JLabel quantity=new JLabel("quantity no");
+    JTextField quantityTF=new JTextField(30);
+    
+    public CustomerItems(){
+        item.put(1,34);
+        item.put(2  ,40);
+
+        setTitle("customer");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // setBounds(EXIT_ON_CLOSE, ABORT, 500 , 500);
+        setSize(500,500);
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        setVisible(true);
+
+        add(mobileno);
+        add(moTextField);
+        add(custid);
+        add(custTF);
+        add(name);
+        add(nameTF);
+
+        JButton but=new JButton("check customer");
+        but.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                func();
+            }
+        });
+        add(but);
+
+        add(itemid);
+        add(itemidTF);
+        add(quantity);
+        add(quantityTF);
+
+        JButton totcost=new JButton("compute cost");
+        totcost.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                cumpcost();
+            }
+        });
+        add(totcost);
+    }
+
+    public void cumpcost(){
+        int totcost=0;
+        int itemid=Integer.parseInt(itemidTF.getText());
+        int cost_each=item.get(itemid);
+
+        int quatity=Integer.parseInt(quantityTF.getText());
+        totcost=cost_each*quatity;
+
+        String disc=JOptionPane.showInputDialog(this,"enter discount");
+        totcost-=Integer.parseInt(disc)*totcost/100;
+
+        JOptionPane.showMessageDialog(this, "your bill is"+totcost, "Cost", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public void func(){
+        Long mobil=Long.parseLong(moTextField.getText());
+        if(custm.get(mobil)!=null){
+            JOptionPane.showMessageDialog(this, "congrats","u are in the collection",JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            custm.put(mobil,Integer.parseInt(custTF.getText()) );
+             JOptionPane.showMessageDialog(this, "congrats","u are a new member in the collection",JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    HashMap<Long,Integer> custm=new HashMap<>();
+    HashMap<Integer,Integer> item=new HashMap<>();
+
+    public static void main(String[] args) {
+        
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run(){
+                new CustomerItems();
+            }
+        });
+    }
+}
