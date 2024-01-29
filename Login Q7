@@ -40,9 +40,14 @@ public class Login extends JFrame implements ActionListener{
 				String pass = "password";
 				String dir = "root";
 				Connection c = (Connection)DriverManager.getConnection(db, dir, pass);
-				Statement smt = c.createStatement();
-				String query = "insert into login values ("+ "'"+idTF.getText() +  "','" + passTF.getText() +  "','" + nameTF.getText() +  "');";
-				smt.executeUpdate(query);	// insert, delete, update
+				//Statement smt = c.createStatement();
+				//String query = "insert into login values ("+ "'"+idTF.getText() +  "','" + passTF.getText() +  "','" + nameTF.getText() +  "');";
+				String query="insert into login values (?,?,?);"
+				query.setString(idTF.getText());
+				query.setString(passTF.getText());
+				query.setString(nameTF.getText());
+				preparedStatement smt=c.preparedStatement(query);
+				smt.executeUpdate();	// insert, delete, update
 				
 				ResultSet res = smt.executeQuery("select * from login;");
 				while(res.next()) {
