@@ -1,0 +1,80 @@
+import java.util.*;
+
+class Student{
+    String name;String  USN;String Dept;String section;
+    Double CGPA;
+
+    Student( String name,String  USN,String Dept,String section,Double CGPA){
+        this.name=name;
+        this.USN=USN;
+        this.Dept=Dept;
+        this.section=section;
+        this.CGPA=CGPA;
+    }
+
+    public String toString(){
+        return this.name+" "+this.USN+" "+this.Dept+" "+this.section+" "+this.CGPA;
+    }
+}
+
+// Search for the students with CGPA > 8.5. Print the student details 
+// belonging to ‘ISE’ department. Print students belonging to ‘C’ section. Use 
+// Iterator to iterate through the list.
+public class Question1 {
+    ArrayList<Student> arr=new ArrayList<>();
+    public void greater_cgpa(Double cgpa){
+        for(Student s:arr){
+            if(s.CGPA>cgpa){
+                System.out.println(s);
+            }
+        }
+    }
+
+    public void get_stud_dept(String dept){
+        for(Student s:arr){
+            if(s.Dept.equals(dept)){
+                System.out.println(s);
+            }
+        }
+    }
+
+    public void section_stud(String sec){
+        // for(Student s:arr){
+        //     if(s.section.equals(sec)){
+        //         System.out.println(sec);
+        //     }
+        // }
+
+        Iterator<Student> a=arr.iterator();
+
+        while(a.hasNext()){
+            Student s=a.next();
+            if(s.section.equals(sec)){
+                System.out.println(s);
+            }
+        }
+
+    }
+
+    public static void main(String[] args) {
+        Question1 question1 = new Question1();
+
+        // Adding sample students to the list
+        question1.arr.add(new Student("John", "1", "ISE", "A", 8.7));
+        question1.arr.add(new Student("Alice", "2", "CSE", "C", 9.1));
+        question1.arr.add(new Student("Bob", "3", "ISE", "B", 8.3));
+        question1.arr.add(new Student("Eve", "4", "ECE", "C", 8.9));
+
+        // Search for students with CGPA > 8.5
+        System.out.println("Students with CGPA > 8.5:");
+        question1.greater_cgpa(8.5);
+
+        // Print student details belonging to 'ISE' department
+        System.out.println("\nStudents belonging to 'ISE' department:");
+        question1.get_stud_dept("ISE");
+
+        // Print students belonging to 'C' section
+        System.out.println("\nStudents belonging to 'C' section:");
+        question1.section_stud("C");
+    }    
+}
