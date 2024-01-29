@@ -7,118 +7,82 @@
 //Additional: Display all the phone numbers from the callers list whose name start 
 //from “A”.
 
-package is001;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
-class Detail
-{
-  String name;
-  long number;
+class Detail{
+    String name;
+    long no;
 
-    Detail (String name, long number)
-  {
-    this.name = name;
-    this.number = number;
-  }
+    Detail(String name,long no){
+        this.name=name;
+        this.no=no;
+    }
 
-  public String toString ()
-  {
-    return this.name + " : " + this.number;
-  }
+    public String toString(){
+        return this.name+" "+this.no;
+    }
+}
+public class Question2 {
+    static HashMap<Detail,ArrayList<Detail>> map=new HashMap<>();
+    public static ArrayList<Detail> get_missed_calls(Detail head){
+        Scanner in=new Scanner(System.in);
+        int n;
+        ArrayList<Detail> ans=new ArrayList<>();
+        System.out.println("enter the no of missed calls");
+        n=in.nextInt();
+        for(int i=0;i<n;i++){
+            
+            System.out.println("enter the no of missed call");
+            long no=in.nextLong();
+
+            ArrayList<Detail> s=map.get(head);
+            int flag=0;
+            String name="";
+            for(Detail j:s){
+                if(j.no==no){
+                    name=j.name;
+                    flag=1;
+                }
+            }
+            if(flag==0){
+                name="private caller";
+            }
+            
+            Detail d=new Detail(name, no);
+            ans.add(d);
+        }
+
+        return ans;
+    }
+    public static void deleteno(Detail d,Detail head){
+        ArrayList<Detail> arr=map.get(head);
+
+        if(arr.contains(d)){
+            arr.remove(d);
+            System.out.println("Call details removed successfully.");
+        }
+        else{
+            System.out.println("not present to delete");
+        }
+    }
+    public static void main(String[] args) {
+        Question2 telephone = new Question2();
+        Detail head = new Detail("Head", 0); // Assuming a dummy head detail for the hashmap
+
+        // Simulating missed calls
+        ArrayList<Detail> missedCalls = new ArrayList<>();
+        missedCalls.add(new Detail("Alice", 1234567890));
+        missedCalls.add(new Detail("Bob", 987654367));
+        missedCalls.add(new Detail("Charlie", 999888777));
+
+        telephone.map.put(head, missedCalls);
+
+        ArrayList<Detail> missed=get_missed_calls(head);
+        for (Detail call : missed) {
+            System.out.println(call);
+        }
+
+        deleteno(new Detail("Charlie", 999888777), head);
+    }   
 }
 
-public class Contact
-{
-
-  public static ArrayList < Long > getmissedCalls ()
-  {
-    ArrayList < Long > a = new ArrayList <> ();
-    Scanner in = new Scanner (System.in);
-      System.out.println ("enter no of missed calls");
-    int n = in.nextInt ();
-
-      System.out.println ("enter the missed calls");
-    for (int i = 0; i < n; i++)
-      {
-	long s = in.nextLong ();
-	  a.add (s);
-      }
-
-    return a;
-  }
-
-  public static ArrayList < Detail > deletemissedcall (ArrayList < Detail >
-						       arr, long no)
-  {
-    Detail d = null;
-    int flag = 0;
-  for (Detail i:arr)
-      {
-	if (i.number == no)
-	  {
-	    d = i;
-	    flag = 1;
-	    break;
-	  }
-      }
-    if (flag == 1)
-      {
-	arr.remove (d);
-      }
-    return arr;
-  }
-
-  public static ArrayList < Detail > missedcallsDetail (HashMap < Detail, List < Detail >> map, ArrayList < Long >arr, long no, String name)
-  {
-List < Detail > l = map.get (new Detail (name, no));
-    ArrayList < Detail > d = new ArrayList <> ();
-
-  for (Detail i:l)
-      {
-	if (arr.contains (i.number))
-	  {
-	    System.out.println (i.toString ());
-	    d.add (i);
-	  }
-	else
-	  {
-	    System.out.println ("private caller");
-	  }
-      }
-
-    return d;
-
-  }
-
-  public static void main (String args[])
-  {
-    HashMap < Detail, List < Detail >> map = new HashMap <> ();
-    Scanner in = new Scanner (System.in);
-    System.out.println ("enter Detail(name,number) of owner");
-    String ownname = in.next ();
-    long num = in.nextLong ();
-    Detail d = new Detail (ownname, num);
-
-    System.out.println ("enter no of contacts");
-    int n = in.nextInt ();
-
-    List < Detail > l = new ArrayList <> ();
-
-    for (int i = 0; i < n; i++)
-      {
-	String name = in.next ();
-	long no = in.nextLong ();
-	Detail o = new Detail (ownname, num);
-
-	l.add (o);
-      }
-
-    map.put (d, l);
-    ArrayList < Long > a = getmissedCalls ();
-    ArrayList < Detail > missedcalls = missedcallsDetail (map, a, 1234567890, "ramesh");
-    missedcalls = deletemissedcall (missedcalls, 123456781);
-  }
-}
